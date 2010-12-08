@@ -1,0 +1,9 @@
+nbody
+=====
+
+Solve the N-body problem where gravitational field acts among the
+bodies.
+
+This toy project aims to play around with the new parallel language Chapel from
+Cray.
+
