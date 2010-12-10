@@ -7,19 +7,25 @@ bodies.
 This toy project aims to play around with the new parallel language Chapel from
 Cray.
 
+Compilation
+-----------
+
+In order to be able to compile the program you need to have the chapel (chpl)
+compiler in the path. Go to the Chapel site (http://chapel.sourceforge.net) and
+follow the installation instructions. If you have it installed, just run:
+
+    make
 
 Quick Test
-==========
-
+----------
 
 Launch the program
 
-./nbody > out.dat
+    ./nbody > out.dat
 
 Launch gnuplot, then
 
-load "quickviz.p"
-
+    load "quickviz.p"
 
 You can also control the timestep and the final time etc. through config
 variables. see 'nbody -h' for details.
