@@ -32,18 +32,18 @@ class NBodyProblem : PhysicalProblem {
         var infile = new file(filename, FileAccessMode.read);
         infile.open();
 
-        for p in points do {
+        for p in points {
             infile.read(p.mass);
             for j in 1..numDimensions do 
                 infile.read(p.position[j]);
-            for j in 1..numDimensions do 
+            for j in 1..numDimensions do
                 infile.read(p.velocity[j]);
         }
         infile.close(); 
     }
 
     def printParameters(){
-         for p in points do {
+         for p in points {
             writeln("mass: ", p.mass);
             writeln(" position ", p.position);
             writeln(" velocity ", p.velocity);
@@ -56,7 +56,7 @@ class NBodyProblem : PhysicalProblem {
 
     def acceleration() {
         var a: [1..numBodies][1..numDimensions] real;
-        for i in 1..numBodies do {
+        for i in 1..numBodies {
             for j in i+1..numBodies {
                 var distance_vec = points[i].position - points[j].position;
                 var r = distance(points[i].position, points[j].position);
@@ -69,8 +69,8 @@ class NBodyProblem : PhysicalProblem {
 
         var flat_a: [1..numBodies*numDimensions] real;
         var k = 1;
-        for i in 1..numBodies do {
-            for j in 1..numDimensions do {
+        for i in 1..numBodies {
+            for j in 1..numDimensions {
                 flat_a[k]=a[i][j];
                 k+=1;
             }
@@ -141,7 +141,7 @@ class RungeKutta4 {
         var k3 = problem.rhs(y + 0.5*dt*k2, t+0.5*dt);
         var k4 = problem.rhs(y + dt*k3, t+dt);
 
-        var y_new = y + dt/6.0 * (k1 + 2.0 * k2 + 2.0 * k3 + k4);
+        var y_new = y + dt/6.0 * (k1 + 2*k2 + 2*k3 + k4);
 
         problem.update(y_new); 
         problem.time += dt;
