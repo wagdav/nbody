@@ -86,6 +86,7 @@ class NBodyProblem : PhysicalProblem {
         var upper = [numBodies*numDimensions+1..2*numBodies*numDimensions];
 
         tmp = y;
+        update(tmp);
 
         rhs[lower] = tmp[upper];
         rhs[upper] = acceleration();
