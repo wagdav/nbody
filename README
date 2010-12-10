@@ -21,4 +21,7 @@ Launch gnuplot, then
 load "quickviz.p"
 
 
+You can also control the timestep and the final time etc. through config
+variables. see 'nbody -h' for details.
+
 
