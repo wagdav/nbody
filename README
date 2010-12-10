@@ -7,3 +7,18 @@ bodies.
 This toy project aims to play around with the new parallel language Chapel from
 Cray.
 
+
+Quick Test
+==========
+
+
+Launch the program
+
+./nbody > out.dat
+
+Launch gnuplot, then
+
+load "quickviz.p"
+
+
+
