@@ -55,27 +55,20 @@ class NBodyProblem : PhysicalProblem {
     }
 
     def acceleration() {
-        var a: [1..numBodies][1..numDimensions] real;
-        for i in 1..numBodies {
-            for j in i+1..numBodies {
+        var a: [1..numBodies*numDimensions] real;
+        var allBodies = 1..numBodies;
+
+        forall (i,j) in [allBodies, allBodies] { // tensor iteration
+            if i != j {
                 var distance_vec = points[i].position - points[j].position;
                 var r = distance(points[i].position, points[j].position);
-                
-                a[i] -= G * points[j].mass * distance_vec / r**3;
-                a[j] += G * points[i].mass * distance_vec / r**3;
+                var ind_i = (1..numDimensions) + (i-1)*numDimensions;
+
+                a[ind_i] -= G * points[j].mass * distance_vec / r**3;
             }
         }
 
-
-        var flat_a: [1..numBodies*numDimensions] real;
-        var k = 1;
-        for i in 1..numBodies {
-            for j in 1..numDimensions {
-                flat_a[k]=a[i][j];
-                k+=1;
-            }
-        }
-        return flat_a;
+        return a;
     }
     
     def rhs(y, t: real) {
