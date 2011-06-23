@@ -14,21 +14,21 @@ record OneBody {
     var velocity: [1..numDimensions] real;
 }
 
-def distance(x: [],y: []) {
+proc distance(x: [],y: []) {
     return sqrt(+ reduce (x - y)**2);
 }
 
 class PhysicalProblem {
     // abstract class
     var time: real;
-    def get_y() {};
-    def update(y:real) {};
+    proc get_y() {};
+    proc update(y:real) {};
 }
 
 class NBodyProblem : PhysicalProblem {
     var points: [1..numBodies] OneBody;
 
-    def readFromFile(filename) {
+    proc readFromFile(filename) {
         var infile = new file(filename, FileAccessMode.read);
         infile.open();
 
@@ -42,7 +42,7 @@ class NBodyProblem : PhysicalProblem {
         infile.close(); 
     }
 
-    def printParameters(){
+    proc printParameters(){
          for p in points {
             writeln("mass: ", p.mass);
             writeln(" position ", p.position);
@@ -50,11 +50,11 @@ class NBodyProblem : PhysicalProblem {
         }
     }
     
-    def printActualStatus() {
+    proc printActualStatus() {
         writeln(time, " ", get_y());
     }
 
-    def acceleration() {
+    proc acceleration() {
         var a: [1..numBodies*numDimensions] real;
         var allBodies = 1..numBodies;
 
@@ -71,7 +71,7 @@ class NBodyProblem : PhysicalProblem {
         return a;
     }
     
-    def rhs(y, t: real) {
+    proc rhs(y, t: real) {
         var rhs: [1..2*numBodies*numDimensions] real;
         var tmp: [1..2*numBodies*numDimensions] real;
 
@@ -87,7 +87,7 @@ class NBodyProblem : PhysicalProblem {
         return rhs;
     }
     
-    def get_y() {
+    proc get_y() {
         var y: [1..2*numBodies*numDimensions] real;
 
         var k = 1;
@@ -106,7 +106,7 @@ class NBodyProblem : PhysicalProblem {
         return y;
     }
     
-    def update(y: [] real) {
+    proc update(y: [] real) {
         var k=1;
         for p in points do {
             for d in 1..numDimensions do {
@@ -126,7 +126,7 @@ class NBodyProblem : PhysicalProblem {
 
 class RungeKutta4 {
     var problem : NBodyProblem;
-    def advance(dt: real) {
+    proc advance(dt: real) {
         var y = problem.get_y();
         var t = problem.time;
 
@@ -143,7 +143,7 @@ class RungeKutta4 {
 }
 
 
-def main {
+proc main {
     var problem = new NBodyProblem(); 
 
     problem.readFromFile(inputFileName);
