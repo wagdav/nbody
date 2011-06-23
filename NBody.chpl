@@ -27,6 +27,7 @@ class PhysicalProblem {
 
 class NBodyProblem : PhysicalProblem {
     var points: [1..numBodies] OneBody;
+    const stride = numBodies * numDimensions;
 
     proc readFromFile(filename) {
         var infile = new file(filename, FileAccessMode.read);
@@ -55,7 +56,7 @@ class NBodyProblem : PhysicalProblem {
     }
 
     proc acceleration() {
-        var a: [1..numBodies*numDimensions] real;
+        var a: [1..stride] real;
         var allBodies = 1..numBodies;
 
         forall (i,j) in [allBodies, allBodies] { // tensor iteration
@@ -72,11 +73,11 @@ class NBodyProblem : PhysicalProblem {
     }
     
     proc rhs(y, t: real) {
-        var rhs: [1..2*numBodies*numDimensions] real;
-        var tmp: [1..2*numBodies*numDimensions] real;
+        var rhs: [1..2*stride] real;
+        var tmp: [1..2*stride] real;
 
-        var lower = [1..numBodies*numDimensions];
-        var upper = [numBodies*numDimensions+1..2*numBodies*numDimensions];
+        var lower = [1..stride];
+        var upper = [stride+1..2*stride];
 
         tmp = y;
         update(tmp);
@@ -88,20 +89,14 @@ class NBodyProblem : PhysicalProblem {
     }
     
     proc get_y() {
-        var y: [1..2*numBodies*numDimensions] real;
-
+        var y: [1 .. 2 * stride] real;
         var k = 1;
         for p in points do {
             for d in 1..numDimensions do {
-                y[k]=p.position[d];
-                k+=1;
+                y[k] = p.position[d];
+                y[k + stride] = p.velocity[d];
+                k += 1;
             }
-        }
-        for p in points do {
-            for d in 1..numDimensions do {
-                y[k]=p.velocity[d];
-                k+=1;
-            }   
         }
         return y;
     }
@@ -110,19 +105,14 @@ class NBodyProblem : PhysicalProblem {
         var k=1;
         for p in points do {
             for d in 1..numDimensions do {
-                p.position[d]=y[k];
-                k+=1;
-            }
-        }
-        for p in points do {
-            for d in 1..numDimensions do {
-                p.velocity[d]=y[k];
-                k+=1;
+                p.position[d] = y[k];
+                p.velocity[d] = y[k + stride];
+                k += 1;
             }
         }
     }
-
 }
+
 
 class RungeKutta4 {
     var problem : NBodyProblem;
